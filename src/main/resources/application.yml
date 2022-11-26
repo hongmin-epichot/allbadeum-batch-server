@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  mvc:
+    log-request-details: true
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+#    org.springframework.boot.autoconfigure: DEBUG

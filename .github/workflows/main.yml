@@ -1,0 +1,44 @@
+name: Allbadeum Batch Server Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Execute Gradle build
+        run: ./gradlew build
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      - name: Upload to s3
+        run: |
+          aws deploy push \
+            --application-name "allbadeum-batch-server" \
+            --description "This is Allbadeum Batch server." \
+            --s3-location s3://allbadeum-deploy-bucket/allbadeum-batch-server.zip \
+            --source .
+      - name: Deploy
+        run: |
+          aws deploy create-deployment \
+            --application-name "allbadeum-batch-server" \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name "allbadeum-batch-server-deploygroup" \
+            --s3-location bucket=allbadeum-deploy-bucket,bundleType=zip,key=allbadeum-batch-server.zip
+      
