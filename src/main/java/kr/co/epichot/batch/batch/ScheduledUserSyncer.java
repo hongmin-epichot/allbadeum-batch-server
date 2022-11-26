@@ -19,7 +19,7 @@ public class ScheduledUserSyncer {
 
   private JobParameters jobParameters = null;
 
-  @Scheduled(fixedDelay = 1000 * 60)
+  @Scheduled(fixedDelay = 1000 * 60 * 10)
   public void sync() throws JobParametersInvalidException {
     JobParametersIncrementer incrementer = job.getJobParametersIncrementer();
     if (incrementer == null) {
