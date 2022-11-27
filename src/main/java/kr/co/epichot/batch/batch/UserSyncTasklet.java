@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class UserSyncTasklet implements Tasklet {
 
   private final static LocalDateTime UPDATED_AFTER_MIN = LocalDateTime.of(2022, 1, 1, 0, 0);
-  private final LoguinUserClient loguinUserClient;
+  private final LoguinClient loguinClient;
   private final JobExplorer jobExplorer;
   private final UserRepository userRepository;
 
@@ -33,7 +33,7 @@ public class UserSyncTasklet implements Tasklet {
       updatedAfter = UPDATED_AFTER_MIN;
     }
 
-    List<User> updatedUsers = loguinUserClient.getUpdatedUsers(updatedAfter).block();
+    List<User> updatedUsers = loguinClient.getUpdatedUsers(updatedAfter).block();
     if (updatedUsers == null || updatedUsers.isEmpty()) {
       return null;
     }

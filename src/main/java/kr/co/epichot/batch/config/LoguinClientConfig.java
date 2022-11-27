@@ -14,7 +14,7 @@ public class LoguinClientConfig {
   private final String baseUrl = "https://auth.hiadjuster.com/api";
 
   @Bean
-  public WebClient loguinClient() throws SSLException {
+  public WebClient loguinWebClient() throws SSLException {
     ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 2))
         .build();

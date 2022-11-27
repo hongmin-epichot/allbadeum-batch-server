@@ -12,16 +12,26 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class LoguinUserClient {
+public class LoguinClient {
 
   private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
   private final WebClient webClient;
 
   public Mono<List<User>> getUpdatedUsers(LocalDateTime updatedAfter) {
+    return webClient.get()
+        .uri(uriBuilder -> uriBuilder.path("/users/updated")
+            .queryParam("after", updatedAfter.format(dateTimeFormatter))
+            .build())
+        .retrieve()
+        .bodyToMono(new ParameterizedTypeReference<>() {
+        });
+  }
 
+  public Mono<PagedModel<User>> getAllUsers(int page, int size) {
     return webClient.get()
         .uri(uriBuilder -> uriBuilder.path("/users")
-            .queryParam("updated_after", updatedAfter.format(dateTimeFormatter))
+            .queryParam("page", page)
+            .queryParam("size", size)
             .build())
         .retrieve()
         .bodyToMono(new ParameterizedTypeReference<>() {
